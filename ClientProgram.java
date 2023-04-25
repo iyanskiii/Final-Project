@@ -15,4 +15,7 @@ public class ClientProgram {
             System.out.println("Client Error");
         }
     }
+    public static void main(String[] args){
+        ClientProgram cp = new ClientProgram();
+    }
 }
