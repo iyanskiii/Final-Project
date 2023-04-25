@@ -1,0 +1,25 @@
+import java.net.*;
+import java.io.*; //data input and output
+
+public class ServerProgram{
+
+    public ServerProgram(){
+        try {
+            ServerSocket ss = new ServerSocket(49501);
+            Socket s = ss.accept(); //encasulate a connection between the client. once the client connect it will 
+            DataInputStream in = new DataInputStream(s.getInputStream()); //para makuha yung input strings
+            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            String msg = in.readUTF(); //server gonna pause until read a string, waiting readUTF waiting for a string to be read
+            System.out.println("Client says " + msg );
+            out.writeUTF("Hi");      //writing a string to the other host
+            out.flush(); // just to force the data to be sent
+        }catch(IOException ex){
+            System.out.println("Server Error!");
+        }
+    }
+    public static void main(String[] args){
+        ServerProgram sp = new ServerProgram();
+        
+    }
+}
+
