@@ -5,5 +5,4 @@ public class Run {
         frame.setUp();
         frame.addKeyBindings();
     }
-    
 }
