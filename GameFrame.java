@@ -113,5 +113,19 @@ public class GameFrame {
         am.put ("jump", j);
         im.put (KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "jump");
     }
+    private void connectToServer{
+        try{
+            socket = new Socket("localhost", 49501)
+            DataInputStream in = new DataInputStream(socket.getInputStream);
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream);
+            playerId = in.readUTF();
+            System.outprintln("You are player #" + playerId)
+            if (playerId == 1){
+                System.out.println("Waiting for player number 2 to connect");
+            }
+        }catch(IOException ex){
+            System.outprintln("IOException from connect to server")
+        }
+    }
 
 }
