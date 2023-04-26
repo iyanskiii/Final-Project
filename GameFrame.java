@@ -2,6 +2,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.*;
+import java.net.*;
+//I import the code that allows to connect to the server. 
 
 public class GameFrame {
     private int w, h;
@@ -11,6 +14,8 @@ public class GameFrame {
     private Sprite currentSprite;
     private Timer Animator, EnemyGenerator, Countdown, LifeGenerator, LifeAnimator;
     private boolean running;
+    private Socket socket;
+    private int PlayerId; // gets a value after you connect to the server 
 
     public GameFrame () {
         w = 1000;
