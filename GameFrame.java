@@ -15,7 +15,7 @@ public class GameFrame {
     private Timer Animator, EnemyGenerator, Countdown, LifeGenerator, LifeAnimator;
     private boolean running;
     private Socket socket;
-    private int PlayerId; // gets a value after you connect to the server 
+    private int playerId; // gets a value after you connect to the server 
 
     public GameFrame () {
         w = 1000;
@@ -119,12 +119,12 @@ public class GameFrame {
             DataInputStream in = new DataInputStream(socket.getInputStream);
             DataOutputStream out = new DataOutputStream(socket.getOutputStream);
             playerId = in.readUTF();
-            System.outprintln("You are player #" + playerId)
+            System.outprintln("You are player #" + playerId);
             if (playerId == 1){
                 System.out.println("Waiting for player number 2 to connect");
             }
         }catch(IOException ex){
-            System.outprintln("IOException from connect to server")
+            System.outprintln("IOException from connect to server");
         }
     }
 
