@@ -3,16 +3,24 @@ import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage; 
+import java.io.*;
 
 public class Canvas extends JComponent {
-    int w, h, platformheight, score, lives, scoreLength, time;
-    String scoreText;
+    int w, h, platformheight, score, lives, scoreLength, time, index;
+    String scoreText, theme;
     ArrayList<Sprite> sprites;
-    ArrayList<Rectangle> environment, background;
+    ArrayList<Rectangle> environment;
+    ArrayList<Background> background;
     ArrayList<Projectile> projectiles;
     ArrayList<Enemy> enemies;
     ArrayList<Heart> hearts;
+    ArrayList<Background> backgrounds;
+    ArrayList<Color> colors;
     CollisionChecker collision;
+    BufferedImage sprite, enemy, heart;
+    ArrayList<BufferedImage> s_Images, e_Images;
 
     public Canvas (int width, int height) {
         w = width;
@@ -23,15 +31,44 @@ public class Canvas extends JComponent {
         time = 120;
         setPreferredSize(new Dimension(w, h));
         sprites = new ArrayList<Sprite>();
-        background = new ArrayList<Rectangle>();
+        background = new ArrayList<Background>();
         environment = new ArrayList<Rectangle>();
         projectiles = new ArrayList<Projectile>();
         enemies = new ArrayList<Enemy> ();
         hearts = new ArrayList<Heart> ();
-        background.add(new Rectangle (0, 0, w, h, "#4F5326"));
+        colors = new ArrayList<Color> ();
+        backgrounds = new ArrayList<Background> ();
+        s_Images = new ArrayList<BufferedImage> ();
+        e_Images = new ArrayList<BufferedImage> ();
+        
+        background.add(new Background (w, h, "#4F5326"));
         environment.add(new Rectangle (0, h-platformheight, w, 100, "#000000"));
 
-        addSprite(10,(h-platformheight)-80, 80);
+        try {
+            s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/tank2.png")));
+            s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/wizard.png")));
+            s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/mfalcon.png")));
+            s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/gsw.png")));
+            
+            e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/enemy.png")));
+            e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/ghost.png")));
+            e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/tiefighter.png")));
+            e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/lakers.png")));
+        }
+        catch (IOException e) {}
+
+        colors.add(Color.decode("#4F5326"));
+        colors.add(Color.decode("#6B4188"));
+        colors.add(Color.decode("#212F3C"));
+        colors.add(Color.decode("#BF9867"));
+
+                
+        try {
+            heart = ImageIO.read(getClass().getResourceAsStream("assets/heart.png"));
+        }
+        catch (IOException e) {}
+
+        sprites.add(new Sprite(s_Images.get(0), 10,(h-platformheight)-80, 80));
 
         collision = new CollisionChecker ();
 
@@ -43,14 +80,16 @@ public class Canvas extends JComponent {
 
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
+
+        setBackground(index);
         
-        for (Rectangle r: background) {
+        for (Background r: background) {
             r.draw(g2d);
         }
 
-        for (int i=0; i<sprites.size(); i++) {
-            sprites.get(i).draw(g2d);
-        }
+        setSprite(index);
+
+        getSprite().draw(g2d);
 
         if (!projectiles.isEmpty()) {
             for (Projectile p: projectiles) {
@@ -64,11 +103,11 @@ public class Canvas extends JComponent {
             }
         }
 
-        /*if (!hearts.isEmpty()) {
+        if (!hearts.isEmpty()) {
                 for (Heart h: hearts) {
                     h.draw(g2d);
                 }
-        }*/
+        }
 
         for (Rectangle r: environment) {
             r.draw(g2d);
@@ -83,12 +122,16 @@ public class Canvas extends JComponent {
         g2d.drawString (("Time: " + time), w*1/4-(g2d.getFontMetrics().stringWidth("Time:   "))/2, h-platformheight/2);
     }
 
-    public void addSprite (int x, int y, int size) {
-        sprites.add (new Sprite (x, y, size));
-    }
-
     public Sprite getSprite () {
         return sprites.get(0);
+    }
+
+    public void setSprite (int i) {
+        getSprite().setImage(s_Images.get(i));
+    }
+
+    public void setBackground (int i) {
+        background.get(0).setColor(colors.get(i));
     }
 
     public ArrayList getEnemies () {
@@ -136,13 +179,13 @@ public class Canvas extends JComponent {
 
     public void generateEnemy () {
         double spawnX = w * Math.random();
-        Enemy e = new Enemy(spawnX);
+        Enemy e = new Enemy(spawnX, e_Images.get(index));
         enemies.add(e);
     }
 
     public void generateLives () {
         double spawnX = w * Math.random();
-        Heart e = new Heart(spawnX);
+        Heart e = new Heart(spawnX, heart);
         hearts.add(e);
     }
 
@@ -201,6 +244,19 @@ public class Canvas extends JComponent {
                 }
             }
         }
+        Sprite currentSprite = getSprite();
+        if (collision.leftOutOfBounds(currentSprite)) {
+            currentSprite.setX(w-currentSprite.getSize()-10);
+        }
+        if (collision.rightOutOfBounds(currentSprite, w)) {
+            currentSprite.setX(10);
+        }
+        if (collision.upOutOfBounds(currentSprite)) {
+            currentSprite.setY((h-platformheight)-(currentSprite.getSize()));
+        }
+        if (collision.downOutOfBounds(currentSprite, h)) {
+            currentSprite.setY(10);
+        }
     }
 
     public void Countdown () {
@@ -209,5 +265,31 @@ public class Canvas extends JComponent {
 
     public int getTime () {
         return time;
+    }
+
+    public int getLives () {
+        return lives;
+    }
+
+    public int getScore () {
+        return score;
+    }
+
+    public void setTheme (String s) {
+        if (s.equalsIgnoreCase("Tank")) {
+            index = 0;
+        }
+        else if (s.equalsIgnoreCase("Wizard")) {
+            index = 1;
+        }
+        else if (s.equalsIgnoreCase("Space")) {
+            index = 2;
+        }
+        else if (s.equalsIgnoreCase("Basketball")) {
+            index = 3;
+        }
+        else {
+            System.out.println("Invalid theme");
+        }
     }
 }

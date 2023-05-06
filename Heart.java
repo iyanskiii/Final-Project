@@ -6,27 +6,24 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
 import java.io.*;
 
-public class Heart {
+public class Heart implements GameObject {
     private int y, size;
     private double x;
     private boolean visible;
+    private BufferedImage img;
 
-    public Heart (double x) {
+    public Heart (double x, BufferedImage img) {
         this.x = x;
         y = 1;
         size = 50;
+        this.img = img;
         visible = true;
     }
 
     public void draw (Graphics2D g2d) {
-        try {
-            if (visible) {
-                BufferedImage img = ImageIO.read(new File ("heart.png"));
-                g2d.drawImage(img, (int)this.x, y, size, size, null);
-            }
-        }
-        catch (IOException e) {}
-            
+        if (visible) {
+            g2d.drawImage(this.img, (int)this.x, y, size, size, null);
+        }  
     }
 
     public void moveHeart () {
@@ -52,5 +49,5 @@ public class Heart {
     public void setVisible (boolean b) {
         visible = b;
     }
-    
+
 }

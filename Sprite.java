@@ -6,35 +6,45 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
 import java.io.*;
 
-public class Sprite {
+public class Sprite implements GameObject {
     private int x, y, size;
     private String c;
     private Rectangle2D.Double r;
     private Color color;
+    private BufferedImage img;
 
-    public Sprite (int x, int y, int size) {
+    public Sprite (BufferedImage img, int x, int y, int size) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.img = img;
     }
 
     public void draw (Graphics2D g2d) {
-        try {
-            BufferedImage img = ImageIO.read(new File ("tank.png"));
+        //try {
+            //BufferedImage img = ImageIO.read(new File ("tank2.png"));
             g2d.drawImage(img, this.x, this.y, this.size, this.size, null);
-        }
-        catch (IOException e) {}
+        //}
+        //catch (IOException e) {}
     }
 
-    public void moveSpriteX(int horizontal) {
+    public void moveX (int horizontal) {
         this.x += horizontal;
     }
 
-    public void moveSpriteY(int vertical) {
+    public void moveY (int vertical) {
         this.y += vertical;
     }
 
-    public int getX () {
+    public void setX (int location) {
+        this.x = location;
+    }
+
+    public void setY (int location) {
+        this.y = location;
+    }
+
+    public double getX () {
         return this.x;
     }
 
@@ -42,12 +52,12 @@ public class Sprite {
         return this.y;
     }
 
-    public int getWidth () {
+    public int getSize () {
         return this.size;
     }
 
-    public int getHeight () {
-        return this.size;
+    public void setImage (BufferedImage i) {
+        this.img = i;
     }
-        
+
 }
