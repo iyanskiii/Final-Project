@@ -3,6 +3,8 @@ import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.io.*;
+import java.net.*;
 
 public class GameFrame {
     private int w, h;
@@ -16,6 +18,12 @@ public class GameFrame {
     private Timer Animator, EnemyGenerator, Countdown, LifeGenerator, LifeAnimator, LifeChecker, Renderer, moveTimer;
     private ArrayList<Timer> timers;
     private boolean running, left, right, up, down;
+    private Socket socket;
+    private int playerId; // gets a value after you connect to the server 
+    private Enemy enemies;
+    private long seed;
+    private ReadFromServer rfsRunnable;
+    private WriteToServer wtsRunnable;
 
     public GameFrame () {
         w = 1000;
@@ -37,7 +45,7 @@ public class GameFrame {
         f = new JFrame();
         p = (JPanel) f.getContentPane();
         p.setFocusable (true);
-        c = new Canvas (w, h);
+        c = new Canvas (w, h,seed);
         wc = new WelcomeCanvas (w, h);
         f.setTitle("Game Practice");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -262,6 +270,82 @@ public class GameFrame {
         im.put (KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "shoot");
 
     }
+    public void connectToServer(){
+        try{
+            socket = new Socket("localhost",45371);
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            playerId = in.readInt(); 
+            seed = in.readLong();
+            System.out.println("You are player#" + playerId);
+            if (playerId == 1){
+                System.out.println("Waiting for Player #2 to connect...");
+            }
+            rfsRunnable = new ReadFromServer(in);
+            wtsRunnable = new WriteToServer(out);
+            rfsRunnable.waitForStartMsg();
+            }
+            catch(IOException ex){
+                System.out.println("IOException from connectToServer()");
+            }
+        }
+    private class WriteToServer implements Runnable{
+        private DataOutputStream dataOut;
+
+        public WriteToServer(DataOutputStream out){
+             dataOut = out;
+            System.out.println("WTS Runnable created"); 
+       }    
+        @Override
+       public void run() {
+           try{
+               while (true){
+                   dataOut.writeDouble(enemies.getX());  //how to send an arraylist 
+                   dataOut.flush(); 
+                    try{
+                        Thread.sleep(25);
+                    }catch(InterruptedException ex){
+                        System.out.println("Interrupted Exception from WTS run()");
+                    }
+                   }
+           }catch(IOException ex){
+                        System.out.println("IOException from WTS run()");
+                       }
+                   }
+               }
+           //class from receivingg data from the server
+           private class ReadFromServer implements Runnable{
+               private DataInputStream dataIn;
+       
+               public ReadFromServer(DataInputStream In){
+                   this.dataIn = In;
+                   System.out.println("WTS Runnable created");
+               }
+                    public void run() {
+                       try{
+                           while (true){
+                              double Enemyx = dataIn.readDouble();  //how to read an arraylist from networking
+                              enemies.setX(Enemyx); 
+                            //   dataIn.flush(); 
+                               try{
+                                   Thread.sleep(25);
+                               }catch(InterruptedException ex){
+                                   System.out.println("Interrupted Exception from WTS run()");
+                               }
+                           }
+                       }catch(IOException ex){
+                           System.out.println("IOException from WTS run()");
+                       }
+                   }
+               public void waitForStartMsg(){
+                    try{
+                        String startMsg = dataIn.readUTF();
+                        System.out.println("Message from the server" + startMsg); 
+                    }catch(IOException ex){
+                        System.out.println("IOException from waitForStartMsg()");  //I created this to make sure they both started at the same time on their GUI.
+                    }
+               }
+            }
 
     public void startTimers () {
         if (!timers.isEmpty()) {
@@ -296,5 +380,5 @@ public class GameFrame {
         f.revalidate();
         f.repaint();
     }
-    
 }
+
