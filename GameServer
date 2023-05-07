@@ -121,37 +121,3 @@ public class GameServer<ReadFromClient, WriteToClient> {
         gs.acceptConnections();
     }
 }
-
-
-/**
- []On PlayerFrame ni francis, let's add the code that allows it to connect to the server. so we need to import that following:
-
- import java.io.*;
-import java.net.*;
-
-[]Add a socket and a player on the fields
-
-private Socket socket;
-private int PlayerId;   // only gets a value after ou connect to the server 
-
-[]Create a method called to connect the server. Add this after the code on sprite
-
-private void connectToServer{
-    try{
-        socket = new Socket("localhost",49501)  //create a new socket that will iniate a connection to the server.
-        DataInputStream in = new DataInputStream(socket.getInputStream);
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream);
-        playerId = in.readInt();
-        System.outprintln("You are player # + playerID )
-        if (playerId == 1){
-            System.out.println("Waiting for player number 2 to connect");
-        }
-    }catch(IOException ex){
-        System.out.println("IOException from connect to server")
-    }
-}
-
-[]On public static void main(String[] args) ni Francis sa GameFrame
-pF.connectToServer();
-
-*/
