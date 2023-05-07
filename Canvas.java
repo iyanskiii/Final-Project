@@ -6,6 +6,7 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
 import java.io.*;
+import java.net.*; 
 
 public class Canvas extends JComponent {
     int w, h, platformheight, score, lives, scoreLength, time, index;
@@ -20,11 +21,16 @@ public class Canvas extends JComponent {
     ArrayList<Color> colors;
     CollisionChecker collision;
     BufferedImage sprite, enemy, heart;
+    long seed;
+    Random random;
+
     ArrayList<BufferedImage> s_Images, e_Images;
 
-    public Canvas (int width, int height) {
+    public Canvas (int width, int height, long s) {
         w = width;
         h = height;
+        seed = s;
+        random = new Random(seed);
         platformheight = 80;
         score = 0;
         lives = 3;
@@ -137,7 +143,6 @@ public class Canvas extends JComponent {
     public ArrayList getEnemies () {
         return enemies;
     }
-
     public ArrayList getProjectiles () {
         return projectiles;
     }
@@ -178,7 +183,8 @@ public class Canvas extends JComponent {
     }
 
     public void generateEnemy () {
-        double spawnX = w * Math.random();
+        double spawnX = w * random.nextDouble(); //seed = sequence of random number
+        System.out.println(spawnX);  //spawnX = location
         Enemy e = new Enemy(spawnX, e_Images.get(index));
         enemies.add(e);
     }
@@ -293,3 +299,4 @@ public class Canvas extends JComponent {
         }
     }
 }
+
