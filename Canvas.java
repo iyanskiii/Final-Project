@@ -55,11 +55,14 @@ public class Canvas extends JComponent {
             s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/wizard.png")));
             s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/mfalcon.png")));
             s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/gsw.png")));
+            s_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/crab.png")));
+            
             
             e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/enemy.png")));
             e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/ghost.png")));
             e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/tiefighter.png")));
             e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/lakers.png")));
+            e_Images.add(ImageIO.read(getClass().getResourceAsStream("assets/beachball.png")));
         }
         catch (IOException e) {}
 
@@ -67,6 +70,7 @@ public class Canvas extends JComponent {
         colors.add(Color.decode("#6B4188"));
         colors.add(Color.decode("#212F3C"));
         colors.add(Color.decode("#BF9867"));
+        colors.add(Color.decode("#cca22a"));
 
                 
         try {
@@ -293,6 +297,9 @@ public class Canvas extends JComponent {
         }
         else if (s.equalsIgnoreCase("Basketball")) {
             index = 3;
+        }
+        else if (s.equals("Summer")){
+            index = 4;
         }
         else {
             System.out.println("Invalid theme");
