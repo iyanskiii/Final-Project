@@ -10,7 +10,7 @@ public class GameFrame {
     private int w, h;
     private JFrame f;
     private JPanel p, buttons;
-    private JButton tank, wizard, space, bball;
+    private JButton tank, wizard, space, bball,summer;
     private Canvas c;
     private GameOver go;
     private WelcomeCanvas wc;
@@ -34,6 +34,7 @@ public class GameFrame {
         wizard = new JButton ("Wizard");
         space = new JButton ("Space");
         bball = new JButton ("Basketball");
+        summer = new JButton("Summer");
         left = false;
         right = false;
         up = false;
@@ -65,21 +66,30 @@ public class GameFrame {
         wizard.setBorderPainted(false);
         buttons.add(space);
         space.setBackground(Color.decode("#212F3C"));
-        space.setForeground(Color.decode("#FFFFFF"));
+        space.setForeground(Color.decode("#FFFFFF")); //text is white
         space.setOpaque(true);
         space.setBorderPainted(false);
         buttons.add(bball);
         bball.setBackground(Color.decode("#BF9867"));
-        bball.setForeground(Color.decode("#000000"));
+        bball.setForeground(Color.decode("#000000")); //text is color black
         bball.setOpaque(true);
         bball.setBorderPainted(false);
+        buttons.add(summer);
+        summer.setBackground(Color.decode("#cca22a"));
+        summer.setForeground(Color.decode("#FFFFFF"));
+        summer.setOpaque(true);
+        summer.setBorderPainted(false);
         f.add(buttons, BorderLayout.SOUTH);
         f.pack();
         f.setVisible(true);
         f.setResizable(false);
     }
 
-    public void setUpTimersAndKeyBindings () {
+    public void setUpTimersAndKeyBindings () { //The method first sets up an action listener for the GUI 
+                                            //component tank, and when it is clicked, an anonymous ActionListener 
+                                            //object is created with an overridden actionPerformed() method. 
+                                            //Inside this method, the setTheme() method is called on the c object with 
+                                            //the argument "Tank", and then the startGame() method is called.
 
         tank.addActionListener(new ActionListener () {
             @Override
@@ -111,6 +121,15 @@ public class GameFrame {
                 c.setTheme("Basketball");
                 startGame();
             }
+        });
+
+        summer.addActionListener(new ActionListener (){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                c.setTheme("Summer");
+                startGame();
+            }
+        
         });
 
         ActionMap am = p.getActionMap();
@@ -249,7 +268,6 @@ public class GameFrame {
         };
 
 
-
         am.put ("right true", right_true);
         im.put (KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right true");
         am.put ("right false", right_false);
@@ -347,8 +365,8 @@ public class GameFrame {
                }
             }
 
-    public void startTimers () {
-        if (!timers.isEmpty()) {
+    public void startTimers () {  //In summary, this code starts all of the timers in the timers 
+        if (!timers.isEmpty()) {  //collection by calling the start() method on each timer object.
             for (Timer t: timers) {
                 t.start();
             }
@@ -380,5 +398,6 @@ public class GameFrame {
         f.revalidate();
         f.repaint();
     }
+    
 }
 
