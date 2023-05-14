@@ -1,0 +1,53 @@
+ private class WriteToServer implements Runnable {
+
+        private DataOutputStream dataOut;
+
+        public WriteToServer(DataOutputStream out){
+            dataOut = out;
+            System.out.println("WTS Runnable created"); 
+        }    
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    dataOut.writeInt (c.getScore());
+                    dataOut.flush(); 
+                    Thread.sleep (1000);
+                }
+                catch(Exception ex) {
+                    System.out.println("Exception from WTS run()");
+                }
+            }
+        }
+    }
+
+    private class ReadFromServer implements Runnable {
+
+        private DataInputStream dataIn;
+
+        public ReadFromServer(DataInputStream in){
+            dataIn = in;
+            System.out.println("RFS Runnable created");
+        }
+        public void run() {
+            int p1Score;
+            int p2Score;
+            while (true) {
+                try {
+                   
+                    if (playerID == 1) {
+                        p1Score = dataIn.readInt();                    
+                        System.out.println("Score: " + p1Score);
+                    }
+                    else {
+                        p2Score = dataIn.readInt();
+                        System.out.println("Other Score: " + p2Score);
+                    }
+                    Thread.sleep (1000);
+                }
+                catch (Exception e) {
+                    System.out.println("Exception from RFS run()");
+                }
+                
+            }
+        }
