@@ -1,0 +1,43 @@
+/*
+Brief Description of this Class:
+This class has a main method that starts the game by creating a GameFrame object. Using a scanner, an ip address and port number is inputted in the console and is used 
+to connect to wither the localhost or the aws instance. 
+*/
+/**
+CSCI22 Final Project - Animated Scene
+@author Ronald Francis Bautista & Ian Roque Ferol
+@version May 15, 2023
+**/
+/*
+We have not discussed the Java language code in our program 
+with anyone other than our instructor/s or the teaching assistants 
+assigned to this course.
+We have not used Java language code obtained from another student, 
+or any other unauthorized source, either modified or unmodified.
+If any Java language code or documentation used in our program 
+was obtained from another source, such as a textbook or website, 
+that has been clearly noted with a proper citation in the comments 
+of our program.
+*/
+/*
+Certificate of Authorship:
+We hereby certify that the submission described in this document abides by 
+the principles stipulated in the DISCS Academic Integrity Policy document.
+We further certify that we are the authors of this submission and that any assistance 
+We received in its preparation is fully acknowledged and disclosed in the documentation.
+*/
+
+import java.util.*;
+
+public class GameStarter {
+    public static void main (String[] args) {
+        Scanner s = new Scanner(System.in);
+        System.out.print("IP Address: ");
+        String ip = s.nextLine();
+        System.out.print("Port Number: ");
+        int port = Integer.parseInt(s.nextLine());
+        GameFrame frame = new GameFrame(ip, port);
+        frame.setUp();
+        frame.setUpTimersAndKeyBindings();
+    }
+}
