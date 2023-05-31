@@ -58,7 +58,7 @@ public class GameOver extends JComponent {
         r.draw(g2d);
         g2d.setColor(Color.WHITE);
 
-        g2d.setFont(new Font("Copperplate", Font.BOLD, 80));
+        g2d.setFont(new Font("Copperplate", Font.BOLD, 40));
         if (survived) {
             g2d.drawString (("CONGRATULATIONS, YOU SURVIVED!"), this.w*1/2-(g2d.getFontMetrics().stringWidth("CONGRATULATIONS, YOU SURVIVED!"))/2, this.h/2);
             g2d.setFont(new Font("Dialog", Font.PLAIN, 40));
